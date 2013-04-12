@@ -198,3 +198,16 @@ a, .navbar a, .footer a {
   font-size: 12px;
   text-align: center;
 }
+
+div.image {
+    align: center;
+    margin: 16px;
+    padding: 16px;
+}
+
+div.image p {
+    text-align: center;
+    font-style: italic;
+    font-size: smaller;
+    text-indent: 0;
+}
