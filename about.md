@@ -158,8 +158,142 @@ of the HTW Oberschoeneweide in Berlin gives you an idea:
     <p>A properly stacked KC 85/4</p>
 </div>
 
+## Getting Serious
 
+Typical for the top-down-controlled, 5-year plan driven GDR economy, there where not nearly
+enough computers built to freely sell them in stores. Instead, schools and nationally-owned
+companies got allowances of a few machines each. To make the best of this, computer clubs 
+started to appear. Mostly on county-level because you couldn't really setup a computer club
+at school with only a single computer. So after my experiments on the LC-80 I joined the
+AG Computer in Schwarzenberg (AG = Arbeitsgemeinschaft, best translated with "study group"). Bernd
+Beyreuther whom I still work with on computer games today, recommended the AG to me I think.
 
+The AG was located in a magical place, the upper-most story of the keep of Castle Schwarzenberg.
+Unfortunately our teachers could only give us access to the computers once a week for a few
+evening hours. This meant that we had to write down and mentally debug our source code during the 
+week (often during boring school lessons), and then use the valuable computer time to
+type in the source code, and fix the remaining bugs. We only had Z1013s there, which only
+supported 32x32 black-and-white ASCII graphics, not really the right stuff for computer games. 
+But we were a bunch of nerds exploring programming together and generally having a great time.
 
+I was dreaming of working on the just released KC85/3, and I soon found out that there was
+indeed a way to obtain one, although difficult and expensive. My parents took the risk and 
+went self-employed in the 80s, which was very uncommon in the East. As such they were
+entitled to buy office hardware which normally wasn't available for citizens. Long story
+short, I convinced my parents that we would need a computer for the office, and that the
+KC85/3 would fit the requirements perfectly. It had a real keyboard, and while it was
+very expensive (around 3.5k Mark), it was still a lot cheaper then real office computers
+(at 20k Mark or more), for comparison, a car was between 10k and 30k Mark. Of course
+they knew that a normal typewriter would have sufficed, but somehow I convinced them and
+about half a year later, the ordered KC85/3 arrived (must have been end of 1985, or
+beginning of 1986). Now I had access to a powerful home computer every day after school,
+not in the evening of course, since I had to connect to the only TV in the household.
 
+From now on, it went like this: Once a year a fair was happening in Schwarzenberg, with
+a tent full of Western arcade machines. For 2 weeks, this tent was the center of my
+universe. I devoured every single detail of the games, deconstructed them in my mind
+and tried to figure out how they worked. The rest of the year I spent with creating
+clones of those games on the KC85/3. Pretty poor clones most of the time to be honest,
+but I learned to produce an entire computer game with graphics and sound, alone and
+from scratch, all in Z80 assembly language. One game usually took between 6 weeks and 3 months.
 
+Here's a couple of those early games, you might notice a few similarities to existing
+games of the time ;)
+
+<div class="image">
+    <p><img src="images/breakout.jpg"/></p>
+    <p>My Breakout clone, this or Pacman was my first KC85/3 game, I don't remember.</p>
+</div>
+
+<div class="image">
+    <p><img src="images/pacman.jpg"/></p>
+    <p>The above mentioned Pacman clone.</p>
+</div>
+
+<div class="image">
+    <p><img src="images/house.jpg"/></p>
+    <p>'House', a little bit like Loderunner.</p>
+</div>
+
+<div class="image">
+    <p><img src="images/cave.jpg"/></p>
+    <p>An actual side scroller called Cave, didn't really work well with the KC85/3 display hardware.</p>
+</div>
+
+<div class="image">
+    <p><img src="images/labyrinth.jpg"/></p>
+    <p>Labyrinth, my first shot at immersive 3D ;)</p>
+</div>
+
+<div class="image">
+    <p><img src="images/pengo.jpg"/></p>
+    <p>My attempt to reproduce the phenomenal Pengo arcade game.</p>
+</div>
+
+The Pengo clone was certainly the most advanced of my one-man creations. It had
+sort of a multithreaded music system. When a note was played, a timer interrupt was
+setup to fire when the note would end, and within the interrupt handler, the next
+note would be started, along with the timer interrupt for the note after. This way,
+real background music could play in parallel to the game itself, instead of only 
+very simple sound effects.
+
+## Dawn of the 8-Bitters
+
+I was happily coding along for about 2 years, exchanging my games on audio tapes
+with the the AG Computer guys, when one day in 1988 I got a phone call. Of course my parents didn't
+have a phone at home, almost nobody did, but my Grandmother worked in the post-office and on that day
+she hurried all-excited home and tried to explain to me that someone was waiting
+on the phone from a big computer company who wanted to talk to me. This didn't make any sense to me, 
+nobody ever called me on the phone, they could have sent a letter right? During the next half-hour 
+I realized that there were people, important higher-up people in big companies, for whom a phone-call 
+was about as normal as talking to somebody face-to-face.
+
+Turns out the guy on the phone was from the company which built the KC85/3, the
+"VEB Mikroelektronik Mühlhausen", and he wanted to know whether I'd be available
+to slightly modify some of my games so they could be produced and sold commercially, whether
+I'd also like to port those games to the upcoming KC85/4 which was currently in development, and all of this 
+within 6 months and for 8000 Mark. I think I mumbled something like "of course". 
+
+Soon after, my Dad and I drove to Mühlhausen for a meeting with the KC engineers. When we arrived, there 
+were about 5 other kids my age or slightly older from all over the country which got the same offer. We were 
+given a little tour of the company, the terms and conditions of our work was explained, we went
+through the necessary changes to the games, and then the most important event of the day happened:
+we got a glimpse of the KC85/4! It was a beautiful machine, the design not much
+different from the KC85/3, but all in white instead of black. It had more system and video RAM, and
+most importantly for games, the performance and granularity of display memory had improved.
+A block of 1x8 pixels could now be assigned one foreground and one background color instead
+of the old 4x8 pixel blocks. Also the nasty flickering when writing to video memory
+was elimininated, and performance of those writes were highly improved.
+
+The company lent me a KC85/4 to work on for the ports, which I delivered within the 
+agreed time of 6 months. I promptly got the cash, and immediately invested most of it in my own 
+color TV which I used as computer monitor. The company somehow forgot about the KC85/4's they
+lent out, I still have mine stashed away under the roof. I think the games never really made it 
+into mass production, although I heard rumours of them being sold in a shop in Berlin.
+
+1989 was also the year when we completed our first team-work, a platformer called Jungle. 
+For this project we actually split work among several team members. I did the coding, Bernd was 
+designing the levels and created the 2D sprited, and two friends helped with the actual data input, converting
+the 99 level maps Bernd created into hex number and typing them into memory.
+
+I think the game still looks beautiful:
+
+<div class="image">
+    <p><img src="images/jungle.jpg"/></p>
+    <p>Jungle</p>
+</div>
+
+One of the coolest features of the game was the built-in copy function with a generation
+counter. Since the game used custom loader/saver code, the only way to duplicate the
+game was through the builtin custom saver. The new "child copy" got an incremented
+generation counter burned in, so your could be really proud if you had a low
+generation counter :)
+
+If you want to try out some of those games, I recommend one of the emulators floating 
+around the internet. This one seems to work pretty well (although I'm getting garbled
+sound in Parallels on OSX): <a href="http://www.kc85emu.de/Download/Download4.htm" target="_blank">http://www.kc85emu.de/Download/Download4.htm</a>
+That's the coolest thing about the Internet Age, nothing is ever lost :)
+
+## The 90's: Rise of 3D
+
+COMING SOON...

@@ -3,13 +3,25 @@ layout: default
 title: flohofwoe.net
 ---
 
-## Welcome Earthling
+## Welcome
 
-You probably came here to have a look at the <a href="demos.html">Nebula3/emscripten Demos</a>.
-If you're interested in the technical details I recommend you spend a bit of time on my
-<a href="http://flohofwoe.blogspot.com" target="_blank">tech blog</a>.
+This is the personal home page of Andre 'Floh' Weissflog. You probably
+came here for the <a href="demos.html" target="_blank">Nebula3/emscripten demos</a>.
+
+If you're interested in the tech behind these demos, check out my 
+<a href="http://flohofwoe.blogspot.com" target="_blank">tech-blog</a>.
+
+If you want to contact me, find me on 
+<a href="http://www.facebook.com/andre.weissflog.3" target="_blank">Facebook</a> or on LinkedIn.
+
+This page has been created with <a href="http://jekyllrb.com/" target="_blank">Jekyll</a>
+and most of the layout has been blatantly ripped from the 
+<a href="http://www.glfw.org/" target="_blank">GLFW web site</a>. I'll work on making
+it a less obvious copy in the near future :)
 
 ## What's New
+
+Nothing yet.
 
 {% for post in site.tags.news %}
 ---
