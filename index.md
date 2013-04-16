@@ -6,10 +6,12 @@ title: flohofwoe.net
 ## Welcome
 
 This is the personal home page of Andre 'Floh' Weissflog. You probably
-came here for the <a href="demos.html" target="_blank">Nebula3/emscripten demos</a>.
+came here for the <a href="demos.html">Nebula3/emscripten demos</a>.
 
-If you're interested in the tech behind these demos, check out my 
-<a href="http://flohofwoe.blogspot.com" target="_blank">tech-blog</a>.
+If you're interested in the tech behind these demos, visit my 
+<a href="http://flohofwoe.blogspot.com" target="_blank">tech-blog</a>, or if you're
+interested in what game programming was like in the 80's and 90's, check out
+the <a href="about.html">About</a> page.
 
 If you want to contact me, find me on 
 <a href="http://www.facebook.com/andre.weissflog.3" target="_blank">Facebook</a> or on LinkedIn.

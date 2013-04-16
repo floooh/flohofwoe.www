@@ -3,15 +3,14 @@ layout: default
 title: flohofwoe.net
 ---
 
+<!--
 ## A Bit of History
 
 I grew up in East-Germany during the 70's and 80's near the
 small town of Schwarzenberg close to the Czech border in a region called Erzgebirge.
 'Erzgebirge' literally translates to 'Ore Mountains' for the rich deposits 
 of iron and silver ore which were mined here between the 13th 
-and 17th century. If you have read Neal Stephenson's Baroque Cycle: Jack and Eliza 
-must have crossed the mountains somewhere nearby when they travelled from 
-Joachimsthal to Leipzig.
+and 17th century. 
 
 In the dark ages, before the Erzgebirge was colonized by settlers, the mountains 
 were sometimes called "Miriquidi", which is a Latin bastardization of the northern 
@@ -39,7 +38,7 @@ happened.
 When the Americans and Soviets moved in and won the war, they left a
 small triangle unoccupied in south-eastern Germany, right around
 Schwarzenberg for almost two months. Nobody really knows why, and there's 
-a good amount of conspiracy theories around it. Today this short era is 
+a good amount of conspiracy theories about this. Today this short era is 
 known as the "Free Republic of Schwarzenberg", a wonderfully utopian name that
 never existed in reality. The truth behind it is probably very simple. 
 The Soviets, coming from the East, seemed to have stopped where planned, 
@@ -58,6 +57,8 @@ out of East Germany, one of the biggest mining operations in history started
 when huge amounts of Uranium were discovered, which in the
 following 30 years became the main source of Uranium for the Soviet nuclear
 weapons program.
+-->
+
 
 ## 1984
 
@@ -65,15 +66,14 @@ Some time in 1984, when I was a 12 year old boy, my older brother brought
 a strange electronic device home from work: an 
 LC-80. The LC ist short for Lerncomputer (Learning Computer). 
 This was a minimalistic 8-bit computer with a Z80-compatible CPU, and a whopping
-1 kByte of RAM (of which only 256 bytes were actually usable for machine code
-if I remember right). This thing was unlike any western computer of the
+1 kByte of RAM. This thing was unlike any western computer of the
 late 70's or 80's. It wasn't connected to a TV, but there was
 a seven-segment LED display with 4 digits for the address and 2 digits for content.
 Instead of a QWERTY keyboard there was the casing of a pocket calculator which allowed 
 to input hexadecimal numbers.
 
 <div class="image">
-    <p><img src="images/lc80.jpg"/></p>
+    <p><img src="images/lc80.jpg" width="640"/></p>
     <p>An LC-80 in all its glory</p>
 </div>
 
@@ -150,13 +150,7 @@ of such commands.
 But the killer feature of the KC85 line was the extensibility of the hardware. The base unit had 2 
 module slots, and a nearly infinite number of extension units with 4 slots each
 could be stacked on top of it. In theory, you could have 4MB(!) of RAM bank-switched
-into a 16 kByte memory hole. This nicely preserved KC85/4 in the small computer museum
-of the HTW Oberschoeneweide in Berlin gives you an idea:
-
-<div class="image">
-    <p><img src="images/kc85_4.jpg" width="512"/></p>
-    <p>A properly stacked KC 85/4</p>
-</div>
+into a 16 kByte memory hole.
 
 ## Getting Serious
 
@@ -201,33 +195,28 @@ Here's a couple of those early games, you might notice a few similarities to exi
 games of the time ;)
 
 <div class="image">
-    <p><img src="images/breakout.jpg"/></p>
-    <p>My Breakout clone, this or Pacman was my first KC85/3 game, I don't remember.</p>
+    <p><img src="images/breakout_1.png" width="320"/>  <img src="images/breakout_2.png" width="320"/></p>
+    <p>My Breakout clone on the KC85/3 (running in an emulator)</p>
 </div>
 
 <div class="image">
-    <p><img src="images/pacman.jpg"/></p>
-    <p>The above mentioned Pacman clone.</p>
+    <p><img src="images/pacman_1.png" width="320"/>  <img src="images/pacman_2.png" width="320"/></p>
+    <p>...and the Pacman clone</p>
 </div>
 
 <div class="image">
-    <p><img src="images/house.jpg"/></p>
+    <p><img src="images/house_1.png" width="320"/>  <img src="images/house_2.png" width="320"/></p>
     <p>'House', a little bit like Loderunner.</p>
 </div>
 
 <div class="image">
-    <p><img src="images/cave.jpg"/></p>
+    <p><img src="images/cave_1.png" width="320"/>  <img src="images/cave_2.png" width="320"/></p>
     <p>An actual side scroller called Cave, didn't really work well with the KC85/3 display hardware.</p>
 </div>
 
 <div class="image">
-    <p><img src="images/labyrinth.jpg"/></p>
+    <p><img src="images/labyrinth.png" width="320"/></p>
     <p>Labyrinth, my first shot at immersive 3D ;)</p>
-</div>
-
-<div class="image">
-    <p><img src="images/pengo.jpg"/></p>
-    <p>My attempt to reproduce the phenomenal Pengo arcade game.</p>
 </div>
 
 The Pengo clone was certainly the most advanced of my one-man creations. It had
@@ -237,7 +226,17 @@ note would be started, along with the timer interrupt for the note after. This w
 real background music could play in parallel to the game itself, instead of only 
 very simple sound effects.
 
-## Dawn of the 8-Bitters
+<div class="image">
+    <p><img src="images/pengo_1.png" width="320"/>  <img src="images/pengo_2.png" width="320"/></p>
+    <p>My attempt to reproduce the phenomenal Pengo arcade game.</p>
+</div>
+
+One of the coolest features of the game was the built-in copy function with a generation
+counter. Every new "child copy" of the game got an incremented generation counter
+burned in, so you could check through how many hands your copy has gone.
+
+
+## Going Commercial
 
 I was happily coding along for about 2 years, exchanging my games on audio tapes
 with the the AG Computer guys, when one day in 1988 I got a phone call. Of course my parents didn't
@@ -265,29 +264,29 @@ A block of 1x8 pixels could now be assigned one foreground and one background co
 of the old 4x8 pixel blocks. Also the nasty flickering when writing to video memory
 was elimininated, and performance of those writes were highly improved.
 
+<div class="image">
+    <p><img src="images/kc85_4.jpg" width="512"/></p>
+    <p>A properly stacked KC 85/4 in the computer museum of HTW Oberschoeneweide Berlin</p>
+</div>
+
 The company lent me a KC85/4 to work on for the ports, which I delivered within the 
-agreed time of 6 months. I promptly got the cash, and immediately invested most of it in my own 
+agreed time of 6 months. I promptly got the money, and immediately invested most of it in my own 
 color TV which I used as computer monitor. The company somehow forgot about the KC85/4's they
 lent out, I still have mine stashed away under the roof. I think the games never really made it 
 into mass production, although I heard rumours of them being sold in a shop in Berlin.
 
 1989 was also the year when we completed our first team-work, a platformer called Jungle. 
 For this project we actually split work among several team members. I did the coding, Bernd was 
-designing the levels and created the 2D sprited, and two friends helped with the actual data input, converting
+designing the levels and created the 2D sprites, and two friends helped with the actual data input, converting
 the 99 level maps Bernd created into hex number and typing them into memory.
 
 I think the game still looks beautiful:
 
 <div class="image">
-    <p><img src="images/jungle.jpg"/></p>
-    <p>Jungle</p>
+    <p><img src="images/jungle_1.png" width="320"/>  <img src="images/jungle_2.png" width="320"/></p>
+    <p><img src="images/jungle_3.png" width="320"/>  <img src="images/jungle_4.png" width="320"/></p>
+    <p>Jungle, last and biggest KC project.</p>
 </div>
-
-One of the coolest features of the game was the built-in copy function with a generation
-counter. Since the game used custom loader/saver code, the only way to duplicate the
-game was through the builtin custom saver. The new "child copy" got an incremented
-generation counter burned in, so your could be really proud if you had a low
-generation counter :)
 
 If you want to try out some of those games, I recommend one of the emulators floating 
 around the internet. This one seems to work pretty well (although I'm getting garbled
