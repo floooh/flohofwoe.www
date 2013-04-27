@@ -133,7 +133,7 @@ a, .navbar a, .footer a {
 }
 
 .header {
-  height: 96px;
+  height: 64px;
   background-color: #000000;
 }
 
@@ -210,4 +210,36 @@ div.image p {
     font-style: italic;
     font-size: smaller;
     text-indent: 0;
+}
+
+.emscripten {
+    padding-right: 0; 
+    margin-left: auto; 
+    margin-right: auto; 
+    display: block;
+}
+
+textarea.emscripten { 
+    font-family: "Courier New", Courier, monospace;
+    width: 80%;
+    font-size: 75%;
+    margin-top: 16px;
+    background-color: #333333;
+    border-width: 1px;
+    border-color: #333333;
+    color: #00CC00;
+}
+
+div.emscripten { 
+    text-align: center; 
+}
+
+div.emscripten_border { 
+    border: 1px solid black; 
+}
+
+/* the canvas *must not* have any border or padding, or mouse coords will be wrong */
+canvas.emscripten { 
+    border: 0px none; 
+    background-color: #333333;
 }
