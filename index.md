@@ -21,10 +21,6 @@ and most of the layout has been blatantly ripped from the
 <a href="http://www.glfw.org/" target="_blank">GLFW web site</a>. I'll work on making
 it a less obvious copy in the near future :)
 
-## What's New
-
-Nothing yet.
-
 {% for post in site.tags.news %}
 ---
 <a href="{{ post.url }}">
