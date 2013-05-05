@@ -38,6 +38,8 @@ lighting and a few animated characters thrown in, plus collision test. Move the 
 ghoul around by clicking or holding the left mouse button. The demo tests mainly
 WebGL performance, there are about 3k WebGL calls per frame.
 
+NOTE: Mouse position is currently way off in fullscreen mode!
+
 <div class="image">
     <p><a href="demos/dsomapviewer_asmjs.html"><img src="images/dsomapviewer.jpg" width="640"/></a></p>
     <p><a href="demos/dsomapviewer_asmjs.html">Click here for Map Viewer Demo</a></p>

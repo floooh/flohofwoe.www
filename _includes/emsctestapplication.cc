@@ -84,7 +84,7 @@ EMSCTestApplication::OnOpening()
     // setup the graphics system
     this->graphicsFacade = GraphicsFacade::Create();
     Graphics2::DisplaySetup displaySetup;
-    displaySetup.SetWidth(this->args.GetInt("-w", 900));
+    displaySetup.SetWidth(this->args.GetInt("-w", 800));
     displaySetup.SetHeight(this->args.GetInt("-h", 452));
     displaySetup.SetWindowTitle("CoreGraphics2 Test");
     this->graphicsFacade->Setup(displaySetup, false);
