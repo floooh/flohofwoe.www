@@ -191,6 +191,7 @@ DSOMapViewerApplication::HandleInput()
     {
         // get mouse ray in world space
         float2 mousePos = mouse->GetScreenPosition();
+        
         const CameraSettings& camSettings = this->cameraEntity->Camera()->GetCameraSettings();
         const matrix44& camTransform = this->cameraEntity->Transform()->GetTransform();
         line worldRay = RenderUtil::MouseRayUtil::ComputeWorldMouseRay(mousePos, 50.0f, camTransform, camSettings.GetInvProjTransform(), camSettings.GetZNear(), false);

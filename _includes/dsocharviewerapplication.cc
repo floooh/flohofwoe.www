@@ -21,9 +21,11 @@ const char* Models[200][20] = {
     { "atlantide_guard", "atlantide_member_of_council", "atlantide_priest", 0 },
     { "female_idle_spear_01", "female_idle_spear_02", "male_idle_spear_01", 0 },
     
+/*
     {"barrel_dealer", 0 },
     { "barrel_dealer_01", 0 },
     { "male_idle_01", 0 },
+*/
     
     { "beast_hound", 0 },
     { "beast_hound_01", "beast_hound_01_miniboss", "beast_hound_skeleton", "polarwolf_01_christmas2012", "polarwolf_01_christmas2012_miniboss", "wolf_01", 0 },
@@ -241,12 +243,14 @@ DSOCharViewerApplication::DSOCharViewerApplication() :
 void
 DSOCharViewerApplication::PrintInfo()
 {
+/*
     n_printf("--- Version 1 ---\n");
     n_printf("model: %s, skinlist: %s, anim: %s\n", this->CurModel(), this->CurSkinList(), this->CurAnim());
     n_printf("Up/Down Key: next/previous model\n");
     n_printf("Right Key: next skinlist\n");
     n_printf("Left Key: next animation\n");
     n_printf("Mouse Buttons + Drag: Move Camera\n");
+*/
 }
     
 //------------------------------------------------------------------------------

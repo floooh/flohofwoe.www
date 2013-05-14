@@ -1,18 +1,18 @@
 //------------------------------------------------------------------------------
-//  instancing.cc
-//  (C) 2012 A.Weissflog
+//  audiotest.cc
+//  (C) 2013 A.Weissflog
 //------------------------------------------------------------------------------
 #include "stdneb.h"
-#include "instancingapplication.h"
+#include "audiotestapplication.h"
 
 ImplementNebulaApplication();
 
 void
 NebulaMain(const Util::CommandLineArgs& args)
 {
-    static App::InstancingApplication* app = n_new(App::InstancingApplication);
+    static App::AudioTestApplication* app = n_new(App::AudioTestApplication);
     app->SetCompanyName("Bigpoint GmbH");
-    app->SetAppTitle("N3 Instancing Test App");
+    app->SetAppTitle("N3 Audio Test App");
     app->SetAppID("N3IA");
     app->SetAppVersion("1.0");
     app->SetCmdLineArgs(args);

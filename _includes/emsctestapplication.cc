@@ -187,6 +187,11 @@ EMSCTestApplication::HandleInput()
     this->mayaCameraUtil.SetZoomIn(zoomIn);
     this->mayaCameraUtil.SetZoomOut(zoomOut);
     this->mayaCameraUtil.Update();
+    
+    if (keyboard->KeyDown(Key::M))
+    {
+        Memory::DumpMemoryStatus();
+    }
 }
 
 //------------------------------------------------------------------------------
