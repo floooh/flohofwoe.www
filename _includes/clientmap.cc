@@ -215,8 +215,8 @@ ClientMap::AddInstance(const matrix44& m, const bbox& box, IndexT templIndex, In
 
     // add the instance to the query table
     short minX, minY, minZ, maxX, maxY, maxZ;
-    this->ConvertWorldToGridCoords(box.pmin, minX, minY, minZ);
-    this->ConvertWorldToGridCoords(box.pmax, maxX, maxY, maxZ);
+    this->ConvertWorldToGridCoords(box.pmin(), minX, minY, minZ);
+    this->ConvertWorldToGridCoords(box.pmax(), maxX, maxY, maxZ);
     this->queryTable.AddEntry(this->instances.Size() - 1, minX, maxX, minY, maxY, minZ, maxZ);
 }
 
@@ -312,7 +312,7 @@ void
 ClientMap::ConvertWorldToGridCoords(const float4& world, short& outMapX, short& outMapY, short& outMapZ)
 {
     // shift to bounding box space
-    vector shift = point::origin() - this->box.pmin;
+    vector shift = point::origin() - this->box.pmin();
     float4 v = float4::multiply(world + shift, this->oneDivGridSize);
     outMapX = n_clamp<short>(short(v.x()), 0, this->mapSizeX - 1);
     outMapY = n_clamp<short>(short(v.y()), 0, this->mapSizeY - 1);
