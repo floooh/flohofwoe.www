@@ -18,14 +18,8 @@ class DynamicTestApplication : public EMSCTestApplication
 public:
     /// constructor
     DynamicTestApplication();
-
     /// called during opening phase
     virtual void OnOpening();
-    /// called during closing phase
-    virtual void OnClosing();
-    
-private:
-    Resource2::ResourceId pipelineBuffer;
 };
 
 } // namespace App

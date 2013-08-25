@@ -70,7 +70,7 @@ MapQueryTable::AddEntry(IndexT instIndex, short minX, short maxX, short minY, sh
 {
     n_assert(!this->inQuery);
     n_assert(this->IsValid());
-    n_assert((maxX < this->queryTable.Width()) && (maxZ < this->queryTable.Height()))
+    n_assert((maxX < this->queryTable.Width()) && (maxZ < this->queryTable.Height()));
 
     MapQueryTableEntry newEntry;
     newEntry.Set(instIndex, minX, maxX, minY, maxY, minZ, maxZ);

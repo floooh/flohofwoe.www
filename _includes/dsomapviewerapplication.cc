@@ -9,6 +9,7 @@
 #include "clientmaploader.h"
 #include "input/mouse.h"
 #include "input/keyboard.h"
+#include "input/touchpad.h"
 #include "physics/meshcache.h"
 #include "physics/physicsserver.h"
 #include "physics/level.h"
@@ -184,17 +185,34 @@ DSOMapViewerApplication::HandleInput()
 {
     InputServer* inputServer = InputServer::Instance();
     const Ptr<Mouse>& mouse = inputServer->GetDefaultMouse();
+    const Ptr<TouchPad>& touchPad = inputServer->GetDefaultTouchPad();
     this->touchDown = false;
-
+    float2 screenPos;
+    bool tapped = false;
+    
     // update the target position
-    if (mouse->ButtonPressed(MouseButton::LeftButton))
+    if (touchPad.isvalid())
     {
-        // get mouse ray in world space
-        float2 mousePos = mouse->GetScreenPosition();
-        
+        if (touchPad->Tapped())
+        {
+            tapped = true;
+            screenPos = touchPad->GetPosition();
+        }
+    }
+    else if (mouse.isvalid())
+    {
+        if (mouse->ButtonPressed(MouseButton::LeftButton))
+        {
+            tapped = true;
+            screenPos = mouse->GetScreenPosition();
+        }
+    }
+    
+    if (tapped)
+    {
         const CameraSettings& camSettings = this->cameraEntity->Camera()->GetCameraSettings();
         const matrix44& camTransform = this->cameraEntity->Transform()->GetTransform();
-        line worldRay = RenderUtil::MouseRayUtil::ComputeWorldMouseRay(mousePos, 50.0f, camTransform, camSettings.GetInvProjTransform(), camSettings.GetZNear(), false);
+        line worldRay = RenderUtil::MouseRayUtil::ComputeWorldMouseRay(screenPos, 50.0f, camTransform, camSettings.GetInvProjTransform(), camSettings.GetZNear(), false);
         
         // perform stabbing check
         const ContactPoint* contact = this->physicsServer->GetClosestContactUnderMouse(worldRay, this->stabbingFilterSet);

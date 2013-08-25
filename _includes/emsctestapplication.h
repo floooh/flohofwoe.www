@@ -41,6 +41,10 @@ protected:
     virtual void UpdateSystem();
     /// per-frame update of scene
     virtual void UpdateScene();
+    /// per-frame callback to render the scene (usually not overriden)
+    virtual void DoRender();
+    /// per-frame callback whether app should quit (usually not overriden)
+    virtual bool IsQuitRequested();
     /// handle input
     virtual void HandleInput();
     /// setup light entities

@@ -221,6 +221,7 @@ div.image p {
     text-indent: 0;
 }
 
+/*** emscripten specific ***/
 .emscripten {
     padding-right: 0; 
     margin-left: auto; 
@@ -251,4 +252,37 @@ div.emscripten_border {
 canvas.emscripten { 
     border: 0px none; 
     background-color: #333333;
+}
+
+/*** NaCl specific ***/
+.pnacl_status {
+    text-align: center;
+    font-family: "Courier New", Courier, monospace;
+    color: #00CC00;
+}
+
+.pnacl {
+    padding-right: 0; 
+    margin-left: auto; 
+    margin-right: auto; 
+    display: block;
+}
+
+textarea.pnacl { 
+    font-family: "Courier New", Courier, monospace;
+    width: 80%;
+    font-size: 75%;
+    margin-top: 16px;
+    background-color: #333333;
+    border-width: 1px;
+    border-color: #333333;
+    color: #00CC00;
+}
+
+div.pnacl { 
+    text-align: center; 
+}
+
+div.pnacl_border { 
+    border: 1px solid black; 
 }

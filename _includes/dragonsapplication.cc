@@ -7,6 +7,7 @@
 #include "graphics2/graphicsentity.h"
 #include "graphics2/graphicsstage.h"
 #include "input/keyboard.h"
+#include "input/touchpad.h"
 
 namespace App
 {
@@ -130,25 +131,43 @@ DragonsApplication::HandleInput()
     EMSCTestApplication::HandleInput();
     
     InputServer* inputServer = InputServer::Instance();
-    const Ptr<Keyboard>& keyboard = inputServer->GetDefaultKeyboard();
+    bool moreDragons = false;
+    bool lessDragons = false;
     
-    if (keyboard->KeyDown(Key::Up))
+    // for platforms with keyboard support:
+    const Ptr<Keyboard>& keyboard = inputServer->GetDefaultKeyboard();
+    if (keyboard.isvalid())
     {
-        // more dragons
+        if (keyboard->KeyDown(Key::Up))   moreDragons = true;
+        if (keyboard->KeyDown(Key::Down)) lessDragons = true;
+    }
+    
+    // for platforms with touch input support:
+    const Ptr<TouchPad>& touchPad = inputServer->GetDefaultTouchPad();
+    if (touchPad.isvalid())
+    {
+        if (touchPad->Tapped())
+        {
+            if (touchPad->GetPosition().x() > 0.5f) moreDragons = true;
+            else                                    lessDragons = true;
+        }
+    }
+    
+    if (moreDragons)
+    {
         this->numEntitiesAlongAxis += 2;
         this->SetupModelEntities();
         this->ResetCamera();
     }
-    if (keyboard->KeyDown(Key::Down))
+    if (lessDragons)
     {
-        // less dragons
         if (this->numEntitiesAlongAxis > 1)
         {
             this->numEntitiesAlongAxis -= 2;
             this->SetupModelEntities();
             this->ResetCamera();
         }
-    }    
+    }
 }
     
 } // namespace App

@@ -6,6 +6,7 @@
 #include "emsctestapplication.h"
 #include "input/mouse.h"
 #include "input/keyboard.h"
+#include "input/touchpad.h"
 #include "graphics2/graphicsfacade.h"
 #include "graphics2/graphicsstage.h"
 #include "graphics2/graphics2protocol.h"
@@ -43,6 +44,8 @@ EMSCTestApplication::EMSCTestApplication()
 void
 EMSCTestApplication::OnSetupPreloadQueue()
 {
+    n_printf("> OnSetupPreloadQueue()\n");
+
     this->AddPreloadFile("export:tables/gfxskintags.bin");
     this->AddPreloadFile(NEBULA3_PLACEHOLDER_MESH);
     this->AddPreloadFile(NEBULA3_PLACEHOLDER_COLORTEXTURE);
@@ -62,6 +65,8 @@ EMSCTestApplication::OnSetupPreloadQueue()
 void
 EMSCTestApplication::OnOpening()
 {
+    n_printf("> OnOpening()\n");
+
     // setup central time sources
     this->centralMasterTime = CentralMasterTime::Create();
     this->centralMasterTime->Setup();
@@ -80,15 +85,20 @@ EMSCTestApplication::OnOpening()
     this->httpServerProxy->AttachRequestHandler(Debug::ConsolePageHandler::Create());
     this->httpServerProxy->AttachRequestHandler(Debug::IoPageHandler::Create());
     #endif
-    
+
     // setup the graphics system
     this->graphicsFacade = GraphicsFacade::Create();
     Graphics2::DisplaySetup displaySetup;
-    displaySetup.SetWidth(this->args.GetInt("-w", 800));
-    displaySetup.SetHeight(this->args.GetInt("-h", 452));
+    #if __IOS__
+        displaySetup.SetWidth(this->args.GetInt("-w", 1024));
+        displaySetup.SetHeight(this->args.GetInt("-h", 768));
+    #else
+        displaySetup.SetWidth(this->args.GetInt("-w", 800));
+        displaySetup.SetHeight(this->args.GetInt("-h", 452));
+    #endif
     displaySetup.SetWindowTitle("CoreGraphics2 Test");
     this->graphicsFacade->Setup(displaySetup, false);
-    
+
     // setup input server
     this->inputServer = InputServer::Create();
     this->inputServer->Open();
@@ -168,30 +178,55 @@ EMSCTestApplication::HandleInput()
     InputServer* inputServer = InputServer::Instance();
     const Ptr<Keyboard>& keyboard = inputServer->GetDefaultKeyboard();
     const Ptr<Mouse>& mouse = inputServer->GetDefaultMouse();
+    const Ptr<TouchPad>& touchPad = inputServer->GetDefaultTouchPad();
     
-    this->mayaCameraUtil.SetOrbitButton(mouse->ButtonPressed(MouseButton::LeftButton));
-    this->mayaCameraUtil.SetPanButton(mouse->ButtonPressed(MouseButton::MiddleButton));
-    this->mayaCameraUtil.SetZoomButton(mouse->ButtonPressed(MouseButton::RightButton));
-    this->mayaCameraUtil.SetZoomInButton(mouse->WheelForward());
-    this->mayaCameraUtil.SetZoomOutButton(mouse->WheelBackward());
-    this->mayaCameraUtil.SetMouseMovement(mouse->GetMovement() * 0.5f);
+    if (touchPad.isvalid())
+    {
+        this->mayaCameraUtil.SetZoomButton(false);
+        this->mayaCameraUtil.SetOrbitButton(false);
+        if (touchPad->Pinching())
+        {
+            this->mayaCameraUtil.SetZoomButton(true);
+            this->mayaCameraUtil.SetMouseMovement(touchPad->GetVelocity() * 0.1f);
+        }
+        if (touchPad->Panning())
+        {
+            this->mayaCameraUtil.SetOrbitButton(true);
+            this->mayaCameraUtil.SetMouseMovement(touchPad->GetVelocity() * float2(0.5f, 0.5f));
+        }
+    }
+
+    if (mouse.isvalid())
+    {
+        this->mayaCameraUtil.SetOrbitButton(mouse->ButtonPressed(MouseButton::LeftButton));
+        this->mayaCameraUtil.SetPanButton(mouse->ButtonPressed(MouseButton::MiddleButton));
+        this->mayaCameraUtil.SetZoomButton(mouse->ButtonPressed(MouseButton::RightButton));
+        this->mayaCameraUtil.SetZoomInButton(mouse->WheelForward());
+        this->mayaCameraUtil.SetZoomOutButton(mouse->WheelBackward());
+        this->mayaCameraUtil.SetMouseMovement(mouse->GetMovement() * 0.5f);
+    }
     
     // process keyboard input
-    float zoomIn = 0.0f;
-    float zoomOut = 0.0f;
-    float2 panning(0.0f, 0.0f);
-    if (keyboard->KeyDown(Key::Space))
+    if (keyboard.isvalid())
     {
-        this->mayaCameraUtil.Reset();
+        float zoomIn = 0.0f;
+        float zoomOut = 0.0f;
+        float2 panning(0.0f, 0.0f);
+        if (keyboard->KeyDown(Key::Space))
+        {
+            this->mayaCameraUtil.Reset();
+        }
+        this->mayaCameraUtil.SetZoomIn(zoomIn);
+        this->mayaCameraUtil.SetZoomOut(zoomOut);
+        
+        if (keyboard->KeyDown(Key::M))
+        {
+            Memory::DumpMemoryStatus();
+        }
     }
-    this->mayaCameraUtil.SetZoomIn(zoomIn);
-    this->mayaCameraUtil.SetZoomOut(zoomOut);
+
+    // update the camera util
     this->mayaCameraUtil.Update();
-    
-    if (keyboard->KeyDown(Key::M))
-    {
-        Memory::DumpMemoryStatus();
-    }
 }
 
 //------------------------------------------------------------------------------
@@ -209,6 +244,24 @@ EMSCTestApplication::UpdateScene()
 /**
  */
 void
+EMSCTestApplication::DoRender()
+{
+    this->graphicsFacade->OnFrame();
+}
+
+//------------------------------------------------------------------------------
+/**
+ */
+bool
+EMSCTestApplication::IsQuitRequested()
+{
+    return this->graphicsFacade->IsQuitRequested();
+}
+
+//------------------------------------------------------------------------------
+/**
+ */
+void
 EMSCTestApplication::OnRunning()
 {
     this->ioInterface->Update();
@@ -216,10 +269,10 @@ EMSCTestApplication::OnRunning()
     this->inputServer->OnFrame();
     this->UpdateSystem();
     this->UpdateScene();
-    this->graphicsFacade->OnFrame();
+    this->DoRender();
     this->inputServer->EndFrame();
     Threading::Thread::YieldThread();
-    if (this->graphicsFacade->IsQuitRequested())
+    if (this->IsQuitRequested())
     {
         this->UpdateState(Closing);
     }

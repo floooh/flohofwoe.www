@@ -3,11 +3,18 @@ layout: default
 title: flohofwoe.net
 ---
 
-## Nebula3/emscripten Demos
+## Nebula3 Web Demos
 
-These are Nebula3 engine demos cross-compiled to Javascript+WebGL using 
-<a href="https://github.com/kripken/emscripten" target="_blank">emscripten</a>. Please use
-an uptodate WebGL-enabled browser (Chrome or Firefox)
+These are Nebula3 engine demos using <a href="https://github.com/kripken/emscripten" target="_blank">emscripten</a>
+and <a href="http://www.gonacl.com" target="_blank">PNaCl</a>. 
+
+The emscripten demos are compiled to <a href="http://asmjs.org/spec/latest/" target="_blank">asm.js</a> and should run on any browser
+with proper WebGL support, with Firefox and Chrome being the best options. 
+
+The PNaCl demos will only run in a very recent Google Chrome (at least v.29), and you may have to enable PNaCl support manually. 
+See <a href="http://www.chromium.org/nativeclient/pnacl/building-and-testing-portable-native-client" target="_blank">here</a> for
+details on how this works. At the time of writing, enabling PNaCl was a bit hit-or-miss in Chrome Canary v.31,
+you may have to restart the browser several times, and first startup takes a while (around 1 minute).
 
 All assets used by courtesy of <a href="http://www.drakensang.com" target="_blank">Drakensang Online</a>,
 the game I'm working on during day time.
@@ -25,7 +32,7 @@ One dragon needs 2 uniform updates and 1 draw-call per geometry pass, the charac
 
 <div class="image">
     <p><a href="demos/dragons_asmjs.html"><img src="images/dragons.jpg" width="640"/></a></p>
-    <p><a href="demos/dragons_asmjs.html">Click here for Dragons Demo</a></p>
+    <p><a href="demos/dragons_asmjs.html">emscripten</a>||<a href="demos/dragons_pnacl.html">pnacl</a></p>
 </div>
 cursor up: more dragons<br>
 cursor down: less dragons<br>
@@ -38,11 +45,9 @@ lighting and a few animated characters thrown in, plus collision test. Move the 
 ghoul around by clicking or holding the left mouse button. The demo tests mainly
 WebGL performance, there are about 3k WebGL calls per frame.
 
-NOTE: Mouse position is currently way off in fullscreen mode!
-
 <div class="image">
     <p><a href="demos/dsomapviewer_asmjs.html"><img src="images/dsomapviewer.jpg" width="640"/></a></p>
-    <p><a href="demos/dsomapviewer_asmjs.html">Click here for Map Viewer Demo</a></p>
+    <p><a href="demos/dsomapviewer_asmjs.html">emscripten</a>||<a href="demos/dsomapviewer_pnacl.html">pnacl</a></p>
 </div>
 Move around with left-mouse-button.
 
@@ -52,7 +57,7 @@ Display a selection of Drakensang Online character models and animations.
 
 <div class="image">
     <p><a href="demos/dsocharviewer_asmjs.html"><img src="images/dsocharviewer.jpg" width="640"/></a></p>
-    <p><a href="demos/dsocharviewer_asmjs.html">Click here for Char Viewer Demo</a></p>
+    <p><a href="demos/dsocharviewer_asmjs.html">emscripten</a>||<a href="demos/dsocharviewer_pnacl.html">pnacl</a></p>
 </div>
 cursor up: next character<br>
 cursor down: previous character<br>
@@ -69,7 +74,7 @@ is computed in JS (a conversion from polar to cartesian space, and a matrix-look
 
 <div class="image">
     <p><a href="demos/instancing_asmjs.html"><img src="images/instancing.jpg" width="640"/></a></p>
-    <p><a href="demos/instancing_asmjs.html">Click here for Instancing Demo</a></p>
+    <p><a href="demos/instancing_asmjs.html">emscripten</a>||<a href="demos/instancing_pnacl.html">pnacl</a></p>
 </div>
 cursor up: more cubes<br>
 cursor down: less cubes<br>

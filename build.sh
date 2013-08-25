@@ -12,6 +12,7 @@ echo "Copying asset files..."
 mkdir _site/demos
 rsync -a ~/emsctest/cdndata _site/demos
 echo "Gzipping..."
+
 for file in ~/emsctest/*.html ; do
 	gzip --best -c $file > _site/demos/$(basename $file).gz
 done
@@ -21,6 +22,9 @@ done
 for file in ~/emsctest/*.js ; do
 	gzip --best -c $file > _site/demos/$(basename $file).gz
 done
+cp ~/emsctest/*.pexe _site/demos/
+cp ~/emsctest/*.nmf _site/demos/
+
 echo "Copy htaccess file..."
 cp _htaccess _site/demos/.htaccess
 echo "Done."

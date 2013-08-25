@@ -20,6 +20,8 @@ NebulaMain(const Util::CommandLineArgs& args)
     app->SetOverrideRootDirectory("httpnz://localhost/cdndata");
 #elif __OSX__
     app->SetOverrideRootDirectory("httpnz://localhost:8080/cdndata");
+#elif __NACL__
+    app->SetOverrideRootDirectory("httpnz://localhost:8080/cdndata");
 #endif
     app->StartMainLoop();
 }

@@ -4,9 +4,14 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "dynamictestapplication.h"
+#include "dynamictestplugin.h"
+#include "graphics2/graphicsfacade.h"
 
 namespace App
 {
+using namespace CoreGraphics2;
+using namespace Resource2;
+using namespace Graphics2;
 
 //------------------------------------------------------------------------------
 /**
@@ -14,6 +19,16 @@ namespace App
 DynamicTestApplication::DynamicTestApplication()
 {
     // empty
+}
+
+//------------------------------------------------------------------------------
+/**
+ */
+void
+DynamicTestApplication::OnOpening()
+{
+    EMSCTestApplication::OnOpening();
+    GraphicsFacade::Instance()->AttachPlugin("dyntest", DynamicTestPlugin::Create());
 }
 
 } // namespace App
