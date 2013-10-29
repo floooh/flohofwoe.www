@@ -61,7 +61,7 @@ bool
 MapLoader::Load(const URI& fromUri, bool loadEvents, Ptr<MapData>& outMapData)
 {
     bool result=false;
-    Ptr<Stream> stream = IoServer::Instance()->CreateStream(fromUri);
+    Ptr<Stream> stream = IoServer::Instance()->LoadStreamSync(fromUri);
     this->reader = BinaryReader::Create();
     this->reader->SetStream(stream);
     this->reader->SetMemoryMappingEnabled(true);

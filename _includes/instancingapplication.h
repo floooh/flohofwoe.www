@@ -9,6 +9,7 @@
  */
 #include "emsctest/base/emsctestapplication.h"
 #include "math/polar.h"
+#include "graphics2/graphicsentity.h"
 
 //------------------------------------------------------------------------------
 namespace App

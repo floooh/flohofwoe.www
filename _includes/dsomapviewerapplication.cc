@@ -153,6 +153,19 @@ DSOMapViewerApplication::UpdateScene()
 /**
  */
 void
+DSOMapViewerApplication::ClearScene()
+{
+    this->cameraEntity = 0;
+    this->globalLight = 0;
+    this->pointLights.Clear();
+    this->npcs.Clear();
+    this->playerModelEntity = 0;
+}
+
+//------------------------------------------------------------------------------
+/**
+ */
+void
 DSOMapViewerApplication::SetupLightEntities()
 {
     // setup a global light
@@ -329,7 +342,7 @@ DSOMapViewerApplication::PreloadTemplateCollides(const StringAtom& mapName)
     // open collide bundle path with PackageStreamReader
     String collideBundlePath;
     collideBundlePath.Format("export:maps/%s.col", mapName.Value());
-    Ptr<Stream> stream = IoServer::Instance()->CreateStream(collideBundlePath);
+    Ptr<Stream> stream = IoServer::Instance()->LoadStreamSync(collideBundlePath);
     Ptr<PackageStreamReader> reader = PackageStreamReader::Create();
     reader->SetStream(stream);
     reader->SetHeaderFourCC('MAPC');
@@ -732,10 +745,10 @@ DSOMapViewerApplication::LookupPointLights(const String& mapName)
     SizeT numRows = table->GetNumRows();
     for (rowIndex = 0; rowIndex < numRows; rowIndex++)
     {
-        float4 lightColor    = table->GetRef<float4>(colLightColor, rowIndex);
-        float lightIntensity = table->GetValue<float>(colLightIntensity, rowIndex);
-        float lightRange     = table->GetValue<float>(colLightRange, rowIndex);
-        matrix44 tform       = table->GetRef<matrix44>(colTransform, rowIndex);
+        float4 lightColor    = table->Get<float4>(colLightColor, rowIndex);
+        float lightIntensity = table->Get<float>(colLightIntensity, rowIndex);
+        float lightRange     = table->Get<float>(colLightRange, rowIndex);
+        matrix44 tform       = table->Get<matrix44>(colTransform, rowIndex);
         
         Ptr<GraphicsEntity> light = this->graphicsFacade->CreatePointLightEntity();
         light->Lighting()->SetTransformFromPosDirAndRange(tform.get_position(), downVec, lightRange);
@@ -771,18 +784,18 @@ DSOMapViewerApplication::LookupDefaultAmbienceBubble(const String& mapName)
     SizeT numRows = table->GetNumRows();
     for (rowIndex = 0; rowIndex < numRows; rowIndex++)
     {
-        if (table->GetRef<StringAtom>(colName, rowIndex) == strName)
+        if (table->Get<StringAtom>(colName, rowIndex) == strName)
         {
-            float4 lightColor         = table->GetRef<float4>(colLightColor, rowIndex);
-            float4 lightBackColor     = table->GetRef<float4>(colLightOppositeColor, rowIndex);
-            float lightIntensity      = table->GetValue<float>(colLightIntensity, rowIndex);
-            float4 lightAmbientColor  = table->GetRef<float4>(colLightAmbient, rowIndex);
-            matrix44 tform            = table->GetRef<matrix44>(colTransform, rowIndex);
-            float brightPassThreshold = table->GetValue<float>(colBrightPassThreshold, rowIndex);
-            float4 bloomColor         = table->GetRef<float4>(colBloomColor, rowIndex);
-            float bloomScale          = table->GetValue<float>(colBloomScale, rowIndex);
-            float4 balance            = table->GetRef<float4>(colBalance, rowIndex);
-            float saturation          = table->GetValue<float>(colSaturation, rowIndex);
+            float4 lightColor         = table->Get<float4>(colLightColor, rowIndex);
+            float4 lightBackColor     = table->Get<float4>(colLightOppositeColor, rowIndex);
+            float lightIntensity      = table->Get<float>(colLightIntensity, rowIndex);
+            float4 lightAmbientColor  = table->Get<float4>(colLightAmbient, rowIndex);
+            matrix44 tform            = table->Get<matrix44>(colTransform, rowIndex);
+            float brightPassThreshold = table->Get<float>(colBrightPassThreshold, rowIndex);
+            float4 bloomColor         = table->Get<float4>(colBloomColor, rowIndex);
+            float bloomScale          = table->Get<float>(colBloomScale, rowIndex);
+            float4 balance            = table->Get<float4>(colBalance, rowIndex);
+            float saturation          = table->Get<float>(colSaturation, rowIndex);
             
             this->globalLight->Transform()->SetTransform(tform);
             this->globalLight->Lighting()->Light().SetColor(lightColor * lightIntensity);
@@ -815,7 +828,7 @@ DSOMapViewerApplication::LookupNPCs(const String& mapName)
     SizeT numRows = table->GetNumRows();
     for (rowIndex = 0; rowIndex < numRows; rowIndex++)
     {
-        matrix44 tform = table->GetRef<matrix44>(colTransform, rowIndex);
+        matrix44 tform = table->Get<matrix44>(colTransform, rowIndex);
         Ptr<GraphicsEntity> npc = this->CreateCharacter("mdl:characters/soulless_norseman.n3", "soulless_norseman", "combat_idle_01", tform.get_position());
         npc->Transform()->SetTransform(tform);
         this->npcs.Append(npc);

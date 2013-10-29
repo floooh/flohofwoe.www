@@ -118,6 +118,33 @@ EMSCTestApplication::OnOpening()
 /**
  */
 void
+EMSCTestApplication::OnClosing()
+{
+    this->ClearScene();
+    this->inputServer->Close();
+    this->inputServer = 0;
+    this->graphicsFacade->GetDefaultStage()->RemoveAllEntities();
+    this->graphicsFacade->Discard();
+    
+#if __NEBULA3_HTTP__
+    this->httpServerProxy->Close();
+    this->httpServerProxy = 0;
+    this->httpInterface->Close();
+    this->httpInterface = 0;
+#endif
+    
+    this->centralTime->Discard();
+    this->centralTime = 0;
+    this->centralMasterTime->Discard();
+    this->centralMasterTime = 0;
+    
+    PhasedApplication::OnClosing();
+}
+
+//------------------------------------------------------------------------------
+/**
+ */
+void
 EMSCTestApplication::ResetCamera()
 {
     this->mayaCameraUtil.Reset();
@@ -130,7 +157,7 @@ EMSCTestApplication::ResetCamera()
 void
 EMSCTestApplication::SetupModelEntities()
 {
-    // override in subclass
+    
 }
 
 //------------------------------------------------------------------------------
@@ -146,7 +173,7 @@ EMSCTestApplication::SetupLightEntities()
 /**
  */
 void
-EMSCTestApplication::ClearModelScene()
+EMSCTestApplication::ClearScene()
 {
     // override in subclass
 }
@@ -276,24 +303,6 @@ EMSCTestApplication::OnRunning()
     {
         this->UpdateState(Closing);
     }
-}
-
-//------------------------------------------------------------------------------
-/**
- */
-void
-EMSCTestApplication::OnClosing()
-{
-    this->inputServer->Close();
-    this->inputServer = 0;
-    this->graphicsFacade->GetDefaultStage()->RemoveAllEntities();
-    this->graphicsFacade->Discard();
-    this->centralTime->Discard();
-    this->centralTime = 0;
-    this->centralMasterTime->Discard();
-    this->centralMasterTime = 0;
-
-    PhasedApplication::OnClosing();
 }
 
 //------------------------------------------------------------------------------

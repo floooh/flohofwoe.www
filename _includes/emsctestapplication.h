@@ -51,8 +51,8 @@ protected:
     virtual void SetupLightEntities();
     /// create model entities
     virtual void SetupModelEntities();
-    /// clear models in scene
-    virtual void ClearModelScene();
+    /// clear the scene (discard all created graphics entities)
+    virtual void ClearScene();
     /// reset the camera
     virtual void ResetCamera();
 

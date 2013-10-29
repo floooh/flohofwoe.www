@@ -1,23 +1,30 @@
 #pragma once
 //------------------------------------------------------------------------------
 /**
-    @class App::DragonsApplication
+    @class App::TerrainApplication
     
-    Character rendering test/benchmark app.
-    
-    (C) 2012 A.Weissflog
+    Terrain test application.
+ 
+    (C) 2013 Bigpoint GmbH
 */
 #include "emsctest/base/emsctestapplication.h"
-#include "graphics2/graphicsentity.h"
+#include "cdlodterrain/cdlodterrainfacade.h"
 
 //------------------------------------------------------------------------------
 namespace App
 {
-class DragonsApplication : public EMSCTestApplication
+class TerrainApplication : public EMSCTestApplication
 {
 public:
     /// constructor
-    DragonsApplication();
+    TerrainApplication();
+
+    /// called during opening phase
+    virtual void OnOpening();
+    /// called during closing phase
+    virtual void OnClosing();
+    /// per-frame update of scene
+    virtual void UpdateScene();
 
 protected:
     /// handle input
@@ -26,15 +33,10 @@ protected:
     virtual void SetupLightEntities();    
     /// create model entities
     virtual void SetupModelEntities();
-    /// clear the scene (discard all created graphics entities)
-    virtual void ClearScene();
-    /// reset the camera
-    virtual void ResetCamera();
 
-    int numEntitiesAlongAxis;
+    Ptr<Terrain::CdlodTerrainFacade> terrainFacade;
+    Terrain::CdlodQuadTreeGameDescription terrainDesc;
     Ptr<Graphics2::GraphicsEntity> globalLight;
-    Ptr<Graphics2::GraphicsEntity> pointLight0;
-    Ptr<Graphics2::GraphicsEntity> pointLight1;
     Util::Array<Ptr<Graphics2::GraphicsEntity> > modelEntities;
 };
 

@@ -126,6 +126,20 @@ DragonsApplication::SetupModelEntities()
 /**
  */
 void
+DragonsApplication::ClearScene()
+{
+    // we just need to clear our smart pointers, the rest will be
+    // taken care of when the graphics system shuts down
+    this->globalLight = 0;
+    this->pointLight0 = 0;
+    this->pointLight1 = 0;
+    this->modelEntities.Clear();
+}
+
+//------------------------------------------------------------------------------
+/**
+ */
+void
 DragonsApplication::HandleInput()
 {
     EMSCTestApplication::HandleInput();
@@ -140,6 +154,15 @@ DragonsApplication::HandleInput()
     {
         if (keyboard->KeyDown(Key::Up))   moreDragons = true;
         if (keyboard->KeyDown(Key::Down)) lessDragons = true;
+        if (keyboard->KeyDown(Key::V))
+        {
+            int i;
+            int num = this->modelEntities.Size();
+            for (i = 0; i < num; i += 2)
+            {
+                this->modelEntities[i]->Visibility()->SetVisible(!this->modelEntities[i]->Visibility()->IsVisible());
+            }
+        }
     }
     
     // for platforms with touch input support:

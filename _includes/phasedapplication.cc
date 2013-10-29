@@ -17,6 +17,7 @@ extern "C" void N3EnterFrame(void)
 
 namespace App
 {
+using namespace Parallel;
 using namespace Util;
 using namespace IO;
 
@@ -50,7 +51,7 @@ PhasedApplication::StartMainLoop()
 {
     n_assert(0 != self);
     #if __EMSCRIPTEN__
-    emscripten_set_main_loop(OnPhasedFrame, 0, 0);
+    emscripten_set_main_loop(OnPhasedFrame, 0, 1);
     #elif __FLASCC__
     AS3_GoAsync();
     #else
@@ -134,6 +135,10 @@ PhasedApplication::OnInitial()
     this->coreServer->SetRootDirectory(rootDir);
     this->coreServer->SetRootKey(this->rootKey);
     this->coreServer->Open();
+    
+    // setup parallel subsystem
+    this->parallelFacade = ParallelFacade::Create();
+    this->parallelFacade->Setup();
 
     #if __NEBULA3_HTTP_FILESYSTEM__
     // setup http subsystem
@@ -175,23 +180,18 @@ PhasedApplication::OnPreloading()
     // need to trigger IO interface for async io to work
     this->ioInterface->Update();
 
-    // check through pending preloads and switch to next state
-    // when all are finished
-    // NOTE: we do not delete the preloadQueue, instead we
-    // open the contained stream objects, this will pin the
-    // preloaded data into memory
+    // handle pending preloads
+    IoMemoryCache* memCache = IoMemoryCache::Instance();
     bool allDone = true;
     IndexT i;
-    for (i = 0; i < this->preloadQueue.Size(); i++)
+    for (i = this->preloadQueue.Size() - 1; i >= 0; --i)
     {
         const Ptr<IO::ReadStream>& curMsg = this->preloadQueue[i];
         if (curMsg->Handled())
         {
-            // open the stream, to prevent the data from being unloaded
-            if (curMsg->GetResult() && !curMsg->GetStream()->IsOpen())
-            {
-                curMsg->GetStream()->Open();
-            }
+            // add to IoMemoryCache
+            memCache->AddEntry(curMsg->GetURI().LocalPath(), curMsg->GetStream());
+            this->preloadQueue.EraseIndex(i);
         }
         else
         {
@@ -275,6 +275,8 @@ PhasedApplication::OnQuit()
     this->httpClientRegistry->Discard();
     this->httpClientRegistry = 0;
     #endif
+    this->parallelFacade->Discard();
+    this->parallelFacade = 0;
     this->coreServer = 0;
     this->UpdateState(Terminated);
     #if __EMSCRIPTEN__

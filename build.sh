@@ -27,5 +27,7 @@ cp ~/emsctest/*.nmf _site/demos/
 
 echo "Copy htaccess file..."
 cp _htaccess _site/demos/.htaccess
+cp _htaccess _site/oldstuff/kc85_3/.htaccess
+cp _htaccess _site/oldstuff/pengo/.htaccess
 echo "Done."
 

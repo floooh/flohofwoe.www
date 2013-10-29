@@ -13,6 +13,7 @@
 #include "clientmap.h"
 #include "physics/physicsserver.h"
 #include "physics/charentity.h"
+#include "physics/level.h"
 #include "tabledata/tablebundle.h"
 
 //------------------------------------------------------------------------------
@@ -39,6 +40,8 @@ protected:
     virtual void ResetCamera();
     /// handle input
     virtual void HandleInput();
+    /// clear the scene (discard all created graphics entities)
+    virtual void ClearScene();    
 
     /// setup a new map
     void SetupMap(const Util::String& mapName);

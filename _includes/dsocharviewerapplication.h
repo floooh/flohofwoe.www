@@ -8,6 +8,7 @@
     (C) 2012 A.Weissflog
 */
 #include "emsctest/base/emsctestapplication.h"
+#include "graphics2/graphicsentity.h"
 
 //------------------------------------------------------------------------------
 namespace App
