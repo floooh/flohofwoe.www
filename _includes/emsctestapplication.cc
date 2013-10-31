@@ -329,7 +329,7 @@ EMSCTestApplication::CreateCharacter(const StringAtom& resId, const StringAtom& 
     playClip->SetClipName(anim);
     playClip->SetTrackIndex(0);
     playClip->SetLoopCount(0.0f);
-    playClip->SetTimeOffset(n_rand() * 10000);
+    playClip->SetTimeOffset(Timing::Tick(n_rand() * 10000));
     modelEntity->Character()->PushMessage(playClip.cast<CharacterMessage>());
 
     return modelEntity;

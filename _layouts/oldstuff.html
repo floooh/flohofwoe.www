@@ -8,6 +8,15 @@
         <link rel="alternate" href="/feed/index.xml" type="application/atom+xml" title="Atom Feed">
     </head>
     <body>
+        <!-- catch cursor movements -->
+        <script type="text/javascript">
+            // suppress cursor keys
+            window.addEventListener("keydown", function(e) {
+                if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+                    e.preventDefault();                    
+                }
+            }, false);
+        </script>
 
         <!-- actual page starts here -->
         <div class="page">

@@ -25,6 +25,8 @@ NebulaMain(const Util::CommandLineArgs& args)
     app.SetOverrideRootDirectory("httpnz://0.0.0.0:8000/cdndata");
 #elif __NACL__
     app.SetOverrideRootDirectory("httpnz://localhost:8080/cdndata");
+#elif __WIN32__
+    app.SetOverrideRootDirectory("httpnz://127.0.0.1:8000/cdndata");
 #endif
     app.StartMainLoop();
 }

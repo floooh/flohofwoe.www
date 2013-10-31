@@ -32,7 +32,7 @@ void
 DragonsApplication::ResetCamera()
 {
     float distance = (float(this->numEntitiesAlongAxis) * 5.0f) + 5.0f;
-    this->mayaCameraUtil.Setup(point(0.0f, 1.0f, 0.0f), point(0.0f, distance * 0.3, -distance), vector(0.0f, 1.0f, 0.0f));
+    this->mayaCameraUtil.Setup(point(0.0f, 1.0f, 0.0f), point(0.0f, distance * 0.3f, -distance), vector(0.0f, 1.0f, 0.0f));
     this->mayaCameraUtil.Update();
     this->graphicsFacade->GetDefaultCamera()->Transform()->SetTransform(this->mayaCameraUtil.GetCameraTransform());
 }

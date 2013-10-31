@@ -190,7 +190,14 @@ PhasedApplication::OnPreloading()
         if (curMsg->Handled())
         {
             // add to IoMemoryCache
-            memCache->AddEntry(curMsg->GetURI().LocalPath(), curMsg->GetStream());
+            if (curMsg->GetResult())
+            {
+                memCache->AddEntry(curMsg->GetURI().LocalPath(), curMsg->GetStream());
+            }
+            else
+            {
+                n_warning("PhasedApplication::OnPreloading(): failed to preload file '%s'\n", curMsg->GetURI().AsString().AsCharPtr());
+            }
             this->preloadQueue.EraseIndex(i);
         }
         else

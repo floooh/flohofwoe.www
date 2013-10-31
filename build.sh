@@ -7,6 +7,7 @@ srcdir=~/nebula3/code/tools/emsctest
 for file in ~/nebula3/code/foundation/app/phasedapplication.cc $srcdir/*/*.cc $srcdir/*/*.h ; do
 	expand -t 4 $file > _includes/$(basename $file)
 done
+rm _includes/terrain*
 
 echo "Copying asset files..."
 mkdir _site/demos
@@ -27,7 +28,13 @@ cp ~/emsctest/*.nmf _site/demos/
 
 echo "Copy htaccess file..."
 cp _htaccess _site/demos/.htaccess
-cp _htaccess _site/oldstuff/kc85_3/.htaccess
-cp _htaccess _site/oldstuff/pengo/.htaccess
+for dir in _site/oldstuff/* ; do
+	cp _htaccess $dir/.htaccess
+done
+
+# clean up non-gzip jsmess "exes"
+for str in kc85_3 kc85_4 pengo labyrinth; do
+	rm _site/oldstuff/$str/messkc*.js
+done
 echo "Done."
 

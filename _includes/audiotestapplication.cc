@@ -145,7 +145,8 @@ void
 AudioTestApplication::UpdateSystem()
 {
     const matrix44& cameraTransform = this->graphicsFacade->GetDefaultCamera()->Transform()->GetTransform();
-    this->audioFacade->Update(cameraTransform, vector::nullvec());
+    this->audioFacade->SetListenerTransform(cameraTransform);
+    this->audioFacade->Update();
     EMSCTestApplication::UpdateSystem();
 }
 
