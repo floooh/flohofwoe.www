@@ -16,17 +16,13 @@ NebulaMain(const Util::CommandLineArgs& args)
     app.SetAppID("N3DA");
     app.SetAppVersion("1.0");
     app.SetCmdLineArgs(args);
-#if __EMSCRIPTEN__
-    app.SetOverrideRootDirectory("httpnz://localhost/cdndata");
-#elif __IOS__
-    app.SetOverrideRootDirectory("httpnz://127.0.0.1:8000/cdndata");
-// app->SetOverrideRootDirectory("httpnz://10.164.252.166:8000/cdndata");
-#elif __OSX__
-    app.SetOverrideRootDirectory("httpnz://0.0.0.0:8000/cdndata");
-#elif __NACL__
-    app.SetOverrideRootDirectory("httpnz://localhost:8080/cdndata");
-#elif __WIN32__
-    app.SetOverrideRootDirectory("httpnz://127.0.0.1:8000/cdndata");
+    Util::String rootUrl;
+#if __OSX__
+    rootUrl = "httpnz://0.0.0.0:8000/cdndata";
+#else
+    rootUrl = "httpnz://localhost:8000/cdndata";
 #endif
+    rootUrl = args.GetString("-rooturl", rootUrl);
+    app.SetOverrideRootDirectory(rootUrl);
     app.StartMainLoop();
 }

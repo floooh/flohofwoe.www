@@ -31,7 +31,7 @@ The KC85/4 was the successor to the KC85/3, and mainly had more RAM and better g
 
 ## KC Games
 
-Only two of the games I coded for the KC85/3 currently run in JSMESS so far. I'll update the list as I get more them running (might take a while):
+Three of the games I coded for the KC85/3 run in JSMESS so far. I'll update the list as I get more them running (might take a while):
 
 <div class="image">
 	<p><a href="oldstuff/pengo/pengo.html"><img src="images/pengo_1.png" width="480"/></a></p>
@@ -41,6 +41,11 @@ Only two of the games I coded for the KC85/3 currently run in JSMESS so far. I'l
 <div class="image">
 	<p><a href="oldstuff/labyrinth/labyrinth.html"><img src="images/labyrinth_2.png" width="480"/></a></p>
     <p><a href="oldstuff/labyrinth/labyrinth.html">Click to play Labyrinth</a></p>
+</div>
+
+<div class="image">
+	<p><a href="oldstuff/cave/cave.html"><img src="images/cave.png" width="480"/></a></p>
+    <p><a href="oldstuff/cave/cave.html">Click to play Cave</a></p>
 </div>
 
 

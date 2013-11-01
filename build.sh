@@ -4,7 +4,12 @@ echo "Building web page..."
 jekyll
 echo "Copying source files..."
 srcdir=~/nebula3/code/tools/emsctest
-for file in ~/nebula3/code/foundation/app/phasedapplication.cc $srcdir/*/*.cc $srcdir/*/*.h ; do
+
+# copy a few select source files (expand cmd expands tabs to spaces)
+for file in ~/nebula3/code/foundation/app/phasedapplication.cc \
+			$srcdir/dragons/dragons.cc \
+			$srcdir/dragons/dragonsapplication.cc \
+			$srcdir/base/emsctestapplication.cc ; do
 	expand -t 4 $file > _includes/$(basename $file)
 done
 rm _includes/terrain*
@@ -33,7 +38,7 @@ for dir in _site/oldstuff/* ; do
 done
 
 # clean up non-gzip jsmess "exes"
-for str in kc85_3 kc85_4 pengo labyrinth; do
+for str in kc85_3 kc85_4 pengo labyrinth cave; do
 	rm _site/oldstuff/$str/messkc*.js
 done
 echo "Done."
