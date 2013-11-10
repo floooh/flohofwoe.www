@@ -22,14 +22,14 @@ MEMORY AREAS:
 001A = 00 		; must be color "under" WHITE GHOST
 001B = 00 		; must be color "under" BLUE GHOST
 
-001C  			; backup of PURPLE GHOST screen position
-001E  			; backup of GREEN GHOST screen position
+001C  			; copy of current GHOST position 
+001E  			; copy of current GHOST sprite data
 
 0020 			; backup of color under GHOST?
 
 0021 = 03 		; current lifes
 0022 = 0000 	; current score
-0024 			; 0025, is copied here
+0024 			; 0025, 0026, 0027, 0028 is copied here (direction of current AI ghost?)
 0025 = F0 		; could be direction of PURPLE GHOST? (up)
 0026 = 02  		; could be direction of GREEN GHOST? (right)
 0027 = FE 		; could be direction of WHITE GHOST (left)
@@ -37,11 +37,15 @@ MEMORY AREAS:
 0029 = 00 		; counts from 1 to 4, and is then reset to 0
 
 002F 			; ?? ghost color is stored here
-0030  			; ?? 0008 is stored here for PURPLE GHOST
-0032 			; ?? 0010 is stored here for PURPLE GHOST
-0034 			; ?? 0018 is stored here for PURPLE GHOST
-0036 			; ?? 0025 is stored here for PURPLE GHOST
+0030  			; indirection pointer (0008, 000A, 000C, 000E): address of screen pos of current AI ghost
+0032 			; indirection pointer (0010, 0012, 0014, 0016): address of sprite data for current AI ghost
+0034 			; indirection pointer (0018, 0019, 001A, 001B): address of color under current AI ghost
+0036 			; indirection pointer (0025, 0026, 0027, 0028): address of direction for current AI ghost
 
+0037			; ?? compared against 02 in 0CB8, doesn't make sense since 0036 is a 16 bit address...
+0038			; GHOST AI: new current ghost position
+003A 			; GHOST AI: stored random direction for GHOST
+0040 			; barrier-counter for current ghost (incremented by 1 for each direction with a barrier)
 0041 = 06 		; game speed (6 * 6ms) set in 0B72
 
 0300 .. 031F:   ; an empty sprite (for some reason, there's 1 pixel set?!)
@@ -61,6 +65,26 @@ MEMORY AREAS:
 30D: ........ 31D: ........
 30E: ........ 31E: ........
 30F: ........ 31F: ........
+
+0320 .. 033F:	PACMAN closed mouth
+
+320: ......XX 328: XX......
+321: ....XXXX 329: XXXX....
+322: ..XXXXXX 32A: XXXXXX..
+323: ..XXXXXX 32B: XXXXXX..
+324: .XXXXXXX 32C: XXXXXXX.
+325: .XXXXXXX 32D: XXXXXXX.
+326: XXXXXXXX 32E: XXXXXXXX
+327: XXXXXXXX 32F: XXXXXXXX
+
+330: XXXXXXXX 338: XXXXXXXX
+331: XXXXXXXX 339: XXXXXXXX
+332: .XXXXXXX 33A: XXXXXXX.
+333: .XXXXXXX 33B: XXXXXXX.
+334: ..XXXXXX 33C: XXXXXX..
+335: ..XXXXXX 33D: XXXXXX..
+336: ....XXXX 33E: XXXX....
+337: ......XX 33F: XX......
 
 0340 .. 035F: 	PACMAN sprite pixel data (open mouth, looking right)
 
@@ -202,10 +226,52 @@ MEMORY AREAS:
 416: ........ 41E: ........
 417: ........ 41F: ........
 
+0420 .. 043F: POWER PILL sprite data
+
+420: ......XX 428: XX......
+421: ....XXXX 429: XXXX....
+422: ..XXX... 42A: ...XXX..
+423: ..XXX... 42B: ...XXX..
+424: .XXXX..X 42C: XXXXXXX.
+425: .XXXX..X 42D: XXXXXXX.
+426: XXXXX..X 42E: XXXXXXXX
+427: XXXXX... 42F: .XXXXXXX
+
+430: XXXXX... 438: .XXXXXXX
+431: XXXXX..X 439: XXXXXXXX
+432: .XXXX..X 43A: XXXXXXX.
+433: .XXXX..X 43B: XXXXXXX.
+434: ..XXX... 43C: ...XXX..
+435: ..XXX... 43D: ...XXX..
+436: ....XXXX 43E: XXXX....
+437: ......XX 43F: XX......
+
+0440 .. 045F: orange POINT sprite data
+
+440: ........ 448: ........
+441: ........ 449: ........
+442: ........ 44A: ........
+443: ........ 44B: ........
+444: ........ 44C: ........
+445: .......X 44D: X.......
+446: ......XX 44E: XX......
+447: .....XXX 44F: XXX.....
+
+450: .....XXX 458: XXX.....
+451: ......XX 459: XX......
+452: .......X 45A: X.......
+453: ........ 45B: ........
+454: ........ 45C: ........
+455: ........ 45D: ........
+456: ........ 45E: ........
+457: ........ 45F: ........
+
+
 1000 .. 19FF 	; Playfield Color Bytes
 1A00 .. 1EFF 	; Playfield ASCII
 2000 .. 29FF	; Intro Screen Color Bytes
 2A00 .. 2EFF	; Intro Screen ASCII
+2F00 .. 2FFF 	; random number table with directions (02, FE, 10, F0), 2FFF is 0!!!
 
 1F00 - ??:	custom font
 
@@ -999,21 +1065,35 @@ in A: ghost color
 0733: 00            nop
 0734: C3 00 0C      jp   $0C00 			; continue at 0C00
 
---- continued from 0734
+=== BEGIN OF GHOST AI, EXECUTED 4X, one for each ghost
+--- continued from 0734, also jumped here from 0D3A (end of ghost AI)
 0C00: 3A 29 00      ld a,($0029) 		; 0029 counts from 1 to 4 and is then reset
 0C03: 3C            inc  a
 0C04: 32 29 00      ld   ($0029),a
 0C07: FE 01         cp   $01
-0C09: CA 00 09      jp   z,$0900
+0C09: CA 00 09      jp   z,$0900 		; execute GHOST AI for PURPLE GHOST
 0C0C: FE 02         cp   $02
-0C0E: CA 40 09      jp   z,$0940
+0C0E: CA 40 09      jp   z,$0940 		; execute GHOST AI for GREEN GHOST
 0C11: FE 03         cp   $03
-0C13: CA 80 09      jp   z,$0980
+0C13: CA 80 09      jp   z,$0980 		; execute GHOST AI for WHITE GHOST
 0C16: FE 04         cp   $04
-0C18: CA C0 09      jp   z,$09C0
-0C1B: 3E 00         ld   a,$00
+0C18: CA C0 09      jp   z,$09C0 		; execute GHOST AI for BLUE GHOST
+0C1B: 3E 00         ld   a,$00 			; reset counter for next frame
 0C1D: 32 29 00      ld   ($0029),a
-0C20: C3 90 0A      jp   $0A90
+0C20: C3 90 0A      jp   $0A90 			; all 4 GHOST AIs handled, continue 
+
+--- continued after GHOST AI, FIXME FIXME: THIS HAS BEEN TAMPERED WITH!!!
+--- BUG: TAMPERING !!!
+--- THIS CODE RENDERS 2 POWER PILLS, DEFINITELY TAMPERED
+0A90: 3E 70         ld   a,$70
+0A92: 32 07 00      ld   ($0007),a
+0A95: 21 06 10      ld   hl,$1006
+0A98: 11 20 04      ld   de,$0420
+0A9B: CD 28 02      call $0228
+0A9E: 21 24 30      ld   hl,$3024
+0AA1: 11 20 04      ld   de,$0420
+0AA4: CD 28 02      call $0228
+0AA7: C3 23 06      jp   $0623 			; and jump to start of game loop
 
 --- called when 0029 is 01: prepare indirect pointers for PURPLE GHOST and call 0C23
 0900: 2A 08 00      ld   hl,($0008) 	; copy current PURPLE GHOST screen position to 001C
@@ -1111,101 +1191,225 @@ in A: ghost color
 ... more nops
 09FF: 00            nop
 
+--- this is called when left, right, up OR down of current ghost is a playfield barrier
+0A00: F5            push af
+0A01: 3A 40 00      ld   a,($0040) 		; increment collide barrier counter
+0A04: 3C            inc  a
+0A05: 32 40 00      ld   ($0040),a
+0A08: F1            pop  af
+0A09: C9            ret
+
+--- this is called when left, right, up OR down of current ghost is a regeneration field
+0A0A: 3A 40 00      ld   a,($0040) 		; increment collide barrier counter
+0A0D: 3C            inc  a
+0A0E: 32 40 00      ld   ($0040),a
+0A11: 3A 1E 00      ld   a,($001E) 		; test if current ghost is HOLLOW GHOST (sprite addr 0400)
+0A14: FE 00         cp   $00
+0A16: CA 1A 0A      jp   z,$0A1A 
+0A19: C9            ret
+
+0A1A: 21 C0 03      ld   hl,$03C0 		; convert HOLLOW GHOST back to NORMAL GHOST
+0A1D: 22 1E 00      ld   ($001E),hl 	; set stored sprite address of current ghost to 03C0
+0A20: 2A 32 00      ld   hl,($0032)  	; set original sprite address to 03C0 through 
+0A23: 3E C0         ld   a,$C0 			; current ghost indirection pointer
+0A25: 77            ld   (hl),a
+0A26: 3E 03         ld   a,$03
+0A28: 23            inc  hl
+0A29: 77            ld   (hl),a
+0A2A: C9            ret
+
+--- called from ghost AI, update current GHOST position 
+in: A current ghost direction(?)
+    HL address of current ghost position
+0A30: F5            push af
+0A31: FE F0         cp   $F0 			; up?
+0A33: CA 3F 0A      jp   z,$0A3F
+0A36: FE 10         cp   $10 			; down?
+0A38: CA 3F 0A      jp   z,$0A3F
+0A3B: 85            add  a,l 			; horizontal movement (A is FE or 02)
+0A3C: 6F            ld   l,a
+0A3D: F1            pop  af
+0A3E: C9            ret
+0A3F: 84            add  a,h 			; vertical movement (A is 10 or F0)
+0A40: 67            ld   h,a
+0A41: F1            pop  af
+0A42: C9            ret
+
 
 --- continued from 0029==1, 0029==2, 0029==3, 0029==4, PROBABLY GHOST "AI" ??
+--- restore background under current GHOST
+--- FIXME: BUG WHEN NEITHER A POINT NOR POWER PILL IS UNDER GHOST: WILL ALWAYS RENDER A POINT
 0C23: 3A 20 00      ld   a,($0020)
-0C26: 32 07 00      ld   ($0007),a
-0C29: FE 50         cp   $50
+0C26: 32 07 00      ld   ($0007),a 		; color under current ghost
+0C29: FE 50         cp   $50 			; a POINT (orange)
 0C2B: CA 41 0C      jp   z,$0C41
-0C2E: FE 70         cp   $70
+0C2E: FE 70         cp   $70 			; a POWER PILL
 0C30: CA 47 0C      jp   z,$0C47
-0C33: C3 3B 0C      jp   $0C3B
-0C36: 00            nop
-0C37: 00            nop
-0C38: C3 4A 0C      jp   $0C4A
-0C3B: 3E 50         ld   a,$50
+0C33: C3 3B 0C      jp   $0C3B 			; anything else - BUG?
+
+0C36: 00            nop 				; BUG BUG BUG - THIS LOOKS LIKE A CHEAT HACK??
+0C37: 00            nop 				; I think setup code for rendering "black" should be here...
+0C38: C3 4A 0C      jp   $0C4A 			; original call?
+
+--- continue when neither a POWER PILL nor a POINT is under current GHOST
+0C3B: 3E 50         ld   a,$50 			; shouldn't this be 0?
 0C3D: 32 07 00      ld   ($0007),a
-0C40: 00            nop
-0C41: 11 40 04      ld   de,$0440
+0C40: 00            nop 				; BUG BUG BUG??? this will always render a POINT!!!
+
+--- called when color under current ghost is 50 (point)
+0C41: 11 40 04      ld   de,$0440 		; pointer to POINT sprite data
 0C44: C3 4A 0C      jp   $0C4A
-0C47: 11 20 04      ld   de,$0420
-0C4A: 2A 1C 00      ld   hl,($001C)
-0C4D: CD 28 02      call $0228
-0C50: 3E 00         ld   a,$00
-0C52: 32 40 00      ld   ($0040),a
-0C55: 2A 1C 00      ld   hl,($001C)
-0C58: 3E 02         ld   a,$02
+
+--- called when color under current ghost is 70 (POWER PILL)
+0C47: 11 20 04      ld   de,$0420 		; pointer to POWER PILL data
+
+---  draws the current GHOST background sprite 
+0C4A: 2A 1C 00      ld   hl,($001C) 	; current GHOST position
+0C4D: CD 28 02      call $0228 			; draw POINT or POWER PILL sprite 
+
+0C50: 3E 00         ld   a,$00 			; 0040 incremented for each direction 
+0C52: 32 40 00      ld   ($0040),a 		; with a barrier for current ghost
+
+--- is right of the current ghost a barrier ??
+0C55: 2A 1C 00      ld   hl,($001C) 	; current ghost position
+0C58: 3E 02         ld   a,$02 			; right of current ghost position
 0C5A: 85            add  a,l
 0C5B: 6F            ld   l,a
 0C5C: CD 03 F0      call $F003
-0C5F: 34            inc  (hl)
+0C5F: 34            ; system call 34: compute pixel and color video RAM address
 0C60: 1A            ld   a,(de)
-0C61: FE 58         cp   $58
-0C63: CC 00 0A      call z,$0A00
-0C66: FE 32         cp   $32
-0C68: CC 0A 0A      call z,$0A0A
-0C6B: 2A 1C 00      ld   hl,($001C)
-0C6E: 3E FE         ld   a,$FE
-0C70: 85            add  a,l
+0C61: FE 58         cp   $58 			; 58 is playfield border color
+0C63: CC 00 0A      call z,$0A00 		; increment barrier counter (0040)
+0C66: FE 32         cp   $32 			; 32 is regeneration cross in the middle
+0C68: CC 0A 0A      call z,$0A0A 		; increment barrier counter (0040) and HOLLOW -> NORMAL
+
+--- is left of the current ghost a barrior ??
+0C6B: 2A 1C 00      ld   hl,($001C) 	; current GHOST position
+0C6E: 3E FE         ld   a,$FE 			
+0C70: 85            add  a,l 			; left of current ghost position
 0C71: 6F            ld   l,a
 0C72: CD 03 F0      call $F003
-0C75: 34            inc  (hl)
+0C75: 34            ; system call 34: compute pixel and color video RAM address
 0C76: 1A            ld   a,(de)
 0C77: FE 58         cp   $58
-0C79: CC 00 0A      call z,$0A00
+0C79: CC 00 0A      call z,$0A00 		; increment barrier counter (0040)
 0C7C: FE 32         cp   $32
-0C7E: CC 0A 0A      call z,$0A0A
+0C7E: CC 0A 0A      call z,$0A0A 		; increment barrier counter (0040) and HOLLOW -> NORMAL
+
+--- is below the current ghost a barrier?
 0C81: 2A 1C 00      ld   hl,($001C)
 0C84: 3E 10         ld   a,$10
 0C86: 84            add  a,h
 0C87: 67            ld   h,a
 0C88: CD 03 F0      call $F003
-0C8B: 34            inc  (hl)
+0C8B: 34            ; system call 34: compute pixel and color video RAM address
 0C8C: 1A            ld   a,(de)
 0C8D: FE 58         cp   $58
-0C8F: CC 00 0A      call z,$0A00
+0C8F: CC 00 0A      call z,$0A00 		; increment barrier counter (0040)
 0C92: FE 32         cp   $32
-0C94: CC 0A 0A      call z,$0A0A
+0C94: CC 0A 0A      call z,$0A0A 		; increment barrier counter (0040) and HOLLOW -> NORMAL
+
+--- is above current ghost a barrier?
 0C97: 2A 1C 00      ld   hl,($001C)
 0C9A: 3E F0         ld   a,$F0
 0C9C: 84            add  a,h
 0C9D: 67            ld   h,a
 0C9E: CD 03 F0      call $F003
-0CA1: 34            inc  (hl)
+0CA1: 34            ; system call 34: compute pixel and color video RAM address
 0CA2: 1A            ld   a,(de)
 0CA3: FE 58         cp   $58
-0CA5: CC 00 0A      call z,$0A00
+0CA5: CC 00 0A      call z,$0A00 		; increment barrier counter (0040)
 0CA8: FE 32         cp   $32
-0CAA: CC 0A 0A      call z,$0A0A
+0CAA: CC 0A 0A      call z,$0A0A 		; increment barrier counter (0040) and HOLLOW -> NORMAL
+
+--- 0040 now has contains the number of barriers (0..4)
 0CAD: 00            nop
-0CAE: 00            nop
-0CAF: 00            nop
-0CB0: 00            nop
-0CB1: 00            nop
-0CB2: 00            nop
-0CB3: 00            nop
+... more nops
 0CB4: 00            nop
-0CB5: 3A 37 00      ld   a,($0037)
+
+--- FIXME FIXME: not clear what's happening here
+0CB5: 3A 37 00      ld   a,($0037) 		; hmmmmm nobody seems to write 0037...?
 0CB8: FE 02         cp   $02
-0CBA: C2 C9 0C      jp   nz,$0CC9
-0CBD: 3A 24 00      ld   a,($0024)
-0CC0: 2A 1C 00      ld   hl,($001C)
-0CC3: CD 30 0A      call $0A30
+0CBA: C2 C9 0C      jp   nz,$0CC9 		; this is ALWAYS taken??
+
+--- this is never called
+0CBD: 3A 24 00      ld   a,($0024) 		; direction of current AI ghost(?)
+0CC0: 2A 1C 00      ld   hl,($001C) 	; current ghost position is stored in 001C
+0CC3: CD 30 0A      call $0A30 			; this updates the current GHOST position (A is direction)
 0CC6: C3 D5 0C      jp   $0CD5
-0CC9: ED 5F         ld   a,r
+
+--- continue from 0CBA if $(0037) != 02
+--- this basically moves the current ghost into a random direction
+0CC9: ED 5F         ld   a,r 			; R is DRAM refresh counter (random numer?)
 0CCB: 6F            ld   l,a
-0CCC: 26 2F         ld   h,$2F
-0CCE: 7E            ld   a,(hl)
+0CCC: 26 2F         ld   h,$2F 			; 2F00 .. 2FFF is a table of random directions
+0CCE: 7E            ld   a,(hl) 		; FIXME: 2FFF contains 0! potential bug???
 0CCF: 2A 1C 00      ld   hl,($001C)
-0CD2: CD 30 0A      call $0A30
-0CD5: 32 3A 00      ld   ($003A),a
-0CD8: 22 38 00      ld   ($0038),hl
+0CD2: CD 30 0A      call $0A30 			; move ghost into random direction
+
+0CD5: 32 3A 00      ld   ($003A),a 		; store random position in 003A
+0CD8: 22 38 00      ld   ($0038),hl  	; store new GHOST position in 0038
 0CDB: CD 03 F0      call $F003
-0CDE: 34            inc  (hl)
-0CDF: 1A            ld   a,(de)
-0CE0: 00            nop
+0CDE: 34            ; system call 34: compute pixel and color video RAM address
+0CDF: 1A            ld   a,(de) 		; load color byte in new GHOST position (collision control?)
+0CE0: 00            nop 				; why are here 2 nops??
 0CE1: 00            nop
 0CE2: C3 58 0A      jp   $0A58
+
+--- continue at 0A58: collision check, and retry with new random direction, potential infinite loop?
+0A58: FE 58         cp   $58 			; 58: collision with playfield barrier
+0A5A: CA C9 0C      jp   z,$0CC9 		; -> loop to random direction, basically "retry"
+0A5D: FE 32         cp   $32 			; 32: collision with regeneration field
+0A5F: CA C9 0C      jp   z,$0CC9 		; -> loop to random direction, basically "retry"
+0A62: C3 E5 0C      jp   $0CE5 			; no collision
+
+--- continue if GHOST movement was valid (no barrier collision)
+
+--- write new current AI ghost position back to actual GHOST position variable
+0CE5: 2A 30 00      ld   hl,($0030)  	; HL: address of current GHOST screen pos
+0CE8: 3A 38 00      ld   a,($0038) 		; A: new current ghost position (X)
+0CEB: 77            ld   (hl),a 		; update GHOST position X
+0CEC: 23            inc  hl
+0CED: 3A 39 00      ld   a,($0039) 		
+0CF0: 77            ld   (hl),a 		; update GHOST position Y
+0CF1: 2A 36 00      ld   hl,($0036)
+0CF4: 3A 3A 00      ld   a,($003A)
+0CF7: 77            ld   (hl),a
+
+0CF8: 2A 38 00      ld   hl,($0038) 	; current new GHOST position
+0CFB: CD 03 F0      call $F003
+0CFE: 34            ; system call 34: compute pixel / color video RAM address 
+0CFF: 1A            ld   a,(de) 		; A: color byte under new GHOST position
+0D00: 00            nop
+... more nops
+0D13: 00            nop
+0D14: FE 10         cp   $10 			; collision with RED PACMAN?
+0D16: CC 48 0A      call z,$0A48
+0D19: FE 30         cp   $30 			; collision with YELLOW PACMAN?
+0D1B: CC 48 0A      call z,$0A48
+
+--- SUBROUTINE 0A48: collision of current ghost with YELLOW or RED PACMAN
+0A48: 00            nop
+0A49: 3A 2F 00      ld   a,($002F) 		; current AI ghost color
+0A4C: CD C8 07      call $07C8 			; 07C8: central PACMAN/GHOST collision subroutine
+0A4F: 3E 00         ld   a,$00
+0A51: C9            ret
+
+--- continue: after collision check with PACMAN, A is now color of new ghost position
+0D1E: 2A 34 00      ld   hl,($0034)
+0D21: 77            ld   (hl),a 		; store color of new ghost position
+0D22: 2A 38 00      ld   hl,($0038) 	; 0038 is new current ghost position
+0D25: ED 5B 1E 00   ld   de,($001E) 	; 001E is current GHOST sprite data
+0D29: 3A 2F 00      ld   a,($002F) 		; 002F is current GHOST color
+0D2C: 32 07 00      ld   ($0007),a
+0D2F: CD 28 02      call $0228 			; draw current GHOST
+0D32: 00            nop
+... more nops
+0D39: 00            nop
+0D3A: C3 00 0C      jp   $0C00
+
+
+
 
 
 
