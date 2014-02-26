@@ -154,15 +154,6 @@ DragonsApplication::HandleInput()
     {
         if (keyboard->KeyDown(Key::Up))   moreDragons = true;
         if (keyboard->KeyDown(Key::Down)) lessDragons = true;
-        if (keyboard->KeyDown(Key::V))
-        {
-            int i;
-            int num = this->modelEntities.Size();
-            for (i = 0; i < num; i += 2)
-            {
-                this->modelEntities[i]->Visibility()->SetVisible(!this->modelEntities[i]->Visibility()->IsVisible());
-            }
-        }
     }
     
     // for platforms with touch input support:

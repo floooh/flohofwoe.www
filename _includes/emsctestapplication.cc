@@ -82,8 +82,8 @@ EMSCTestApplication::OnOpening()
     this->httpServerProxy->AttachRequestHandler(Debug::StringAtomPageHandler::Create());
     this->httpServerProxy->AttachRequestHandler(Debug::ThreadPageHandler::Create());
     this->httpServerProxy->AttachRequestHandler(Debug::MemoryPageHandler::Create());
-    this->httpServerProxy->AttachRequestHandler(Debug::ConsolePageHandler::Create());
     this->httpServerProxy->AttachRequestHandler(Debug::IoPageHandler::Create());
+    this->httpServerProxy->AttachRequestHandler(Debug::ConsolePageHandler::Create());
     #endif
 
     // setup the graphics system
@@ -98,10 +98,16 @@ EMSCTestApplication::OnOpening()
     #endif
     displaySetup.SetWindowTitle("CoreGraphics2 Test");
     this->graphicsFacade->Setup(displaySetup, false);
+    this->graphicsFacade->SetStatisticsDisplayEnabled(true);
 
     // setup input server
     this->inputServer = InputServer::Create();
     this->inputServer->Open();
+
+    #if NEBULA3_USE_CONSOLE
+        this->gameConsoleFacade = GameConsole::GameConsoleFacade::Create();
+        this->gameConsoleFacade->Setup();
+    #endif
 
     // reset the camera
     this->ResetCamera();
@@ -120,6 +126,11 @@ EMSCTestApplication::OnOpening()
 void
 EMSCTestApplication::OnClosing()
 {
+#if NEBULA3_USE_CONSOLE
+    this->gameConsoleFacade->Discard();
+    this->gameConsoleFacade = 0;
+#endif
+
     this->ClearScene();
     this->inputServer->Close();
     this->inputServer = 0;
@@ -191,8 +202,12 @@ EMSCTestApplication::UpdateSystem()
     // handle input
     this->HandleInput();
     
+    #if NEBULA3_USE_CONSOLE
+        this->gameConsoleFacade->Update();
+    #endif
+
     #if __NEBULA3_HTTP__
-    this->httpServerProxy->HandlePendingRequests();
+        this->httpServerProxy->HandlePendingRequests();
     #endif
 }
 
@@ -250,6 +265,11 @@ EMSCTestApplication::HandleInput()
         {
             Memory::DumpMemoryStatus();
         }
+        
+        if (keyboard->KeyDown(Key::F1))
+        {
+            this->graphicsFacade->ToggleStatisticsDisplay();
+        }        
     }
 
     // update the camera util
@@ -265,15 +285,6 @@ EMSCTestApplication::UpdateScene()
     // update the camera
     matrix44 cameraTransform = this->mayaCameraUtil.GetCameraTransform();
     this->graphicsFacade->GetDefaultCamera()->Transform()->SetTransform(cameraTransform);
-}
-
-//------------------------------------------------------------------------------
-/**
- */
-void
-EMSCTestApplication::DoRender()
-{
-    this->graphicsFacade->OnFrame();
 }
 
 //------------------------------------------------------------------------------
@@ -296,7 +307,7 @@ EMSCTestApplication::OnRunning()
     this->inputServer->OnFrame();
     this->UpdateSystem();
     this->UpdateScene();
-    this->DoRender();
+    this->graphicsFacade->OnFrame();
     this->inputServer->EndFrame();
     Threading::Thread::YieldThread();
     if (this->IsQuitRequested())
@@ -313,14 +324,16 @@ EMSCTestApplication::OnRunning()
 Ptr<GraphicsEntity>
 EMSCTestApplication::CreateCharacter(const StringAtom& resId, const StringAtom& skinList, const StringAtom& anim, const float4& pos)
 {
+    GraphicsFacade* graphicsFacade = GraphicsFacade::Instance();
+
     matrix44 m = matrix44::identity(); // matrix44::rotationy(n_deg2rad(180.0f));
     vector translate = pos;
     m.translate(translate);
 
-    Ptr<GraphicsEntity> modelEntity = this->graphicsFacade->CreateCharacterEntity();
+    Ptr<GraphicsEntity> modelEntity = graphicsFacade->CreateCharacterEntity();
     modelEntity->Transform()->SetTransform(m);
     modelEntity->Model()->SetResourceId(resId);
-    this->graphicsFacade->GetDefaultStage()->AttachEntity(modelEntity);
+    graphicsFacade->GetDefaultStage()->AttachEntity(modelEntity);
 
     Ptr<Graphics2::ApplySkinList> applySkinList = Graphics2::ApplySkinList::Create();
     applySkinList->SetSkinList(skinList);
@@ -342,9 +355,10 @@ EMSCTestApplication::CreateCharacter(const StringAtom& resId, const StringAtom& 
 Ptr<GraphicsEntity>
 EMSCTestApplication::CreateModel(const StringAtom& resId)
 {
-    Ptr<GraphicsEntity> modelEntity = this->graphicsFacade->CreateModelEntity();
+    GraphicsFacade* graphicsFacade = GraphicsFacade::Instance();
+    Ptr<GraphicsEntity> modelEntity = graphicsFacade->CreateModelEntity();
     modelEntity->Model()->SetResourceId(resId);
-    this->graphicsFacade->GetDefaultStage()->AttachEntity(modelEntity);
+    graphicsFacade->GetDefaultStage()->AttachEntity(modelEntity);
     return modelEntity;
 }
 

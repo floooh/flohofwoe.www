@@ -22,9 +22,9 @@ echo "Gzipping..."
 for file in ~/emsctest/*.html ; do
 	gzip --best -c $file > _site/demos/$(basename $file).gz
 done
-for file in ~/emsctest/*.mem ; do
-	gzip --best -c $file > _site/demos/$(basename $file).gz
-done
+# for file in ~/emsctest/*.mem ; do
+# 	gzip --best -c $file > _site/demos/$(basename $file).gz
+# done
 for file in ~/emsctest/*.js ; do
 	gzip --best -c $file > _site/demos/$(basename $file).gz
 done

@@ -11,10 +11,7 @@ and <a href="http://www.gonacl.com" target="_blank">PNaCl</a>.
 The emscripten demos are compiled to <a href="http://asmjs.org/spec/latest/" target="_blank">asm.js</a> and should run on any browser
 with proper WebGL support, with Firefox and Chrome being the best options. 
 
-The PNaCl demos will only run in a very recent Google Chrome (at least v.29), and you may have to enable PNaCl support manually. 
-See <a href="http://www.chromium.org/nativeclient/pnacl/building-and-testing-portable-native-client" target="_blank">here</a> for
-details on how this works. At the time of writing, enabling PNaCl was a bit hit-or-miss in Chrome Canary v.31,
-you may have to restart the browser several times, and first startup takes a while (around 1 minute).
+The PNaCl demos will only run in a somewhat uptodate Google Chrome version.
 
 All assets used by courtesy of <a href="http://www.drakensang.com" target="_blank">Drakensang Online</a>,
 the game I'm working on during day time.
@@ -80,4 +77,11 @@ cursor up: more cubes<br>
 cursor down: less cubes<br>
 space: DISCO!<br>
 
+## Text Rendering Test
 
+This demonstrates Nebula3's distance field text renderer. 
+
+<div class="image">
+	<p><a href="demos/text_asmjs.html"><img src="images/text.jpg" width="640"/></a></p>
+	<p><a href="demos/text_asmjs.html">emscripten</a>||<a href="demos/text_pnacl.html">pnacl</a></p>
+</div>
